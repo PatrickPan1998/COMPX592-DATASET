@@ -1,0 +1,13 @@
+p1
+    username: '
+    password: '
+p2: 
+    username: ' OR '1'='1' --
+    password: '
+p3: 
+    username: " OR "1"="1 --
+    password: '
+p4: 
+    username: ' OR 1=1 --
+    password: '
+response: redirect to /?error, No database information triggered

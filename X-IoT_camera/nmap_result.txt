@@ -1,0 +1,31 @@
+//connect network
+TCP:
+    remnux@remnux:~$ sudo nmap -sS -p- 192.168.0.109
+    Starting Nmap 7.80 ( https://nmap.org ) at 2025-11-19 19:43 EST
+    Nmap scan report for 192.168.0.109
+    Host is up (0.0064s latency).
+    All 65535 scanned ports on 192.168.0.109 are closed
+    MAC Address: C8:E6:91:0A:6F:4C (Unknown)
+
+    Nmap done: 1 IP address (1 host up) scanned in 467.21 seconds
+
+-------------------------------------------------
+
+UDP:
+    remnux@remnux:~$ sudo nmap -sU -p- 192.168.0.109
+    Starting Nmap 7.80 ( https://nmap.org ) at 2025-11-19 19:42 EST
+    Nmap scan report for 192.168.0.109
+    Host is up (0.0045s latency).
+    Not shown: 65527 closed ports
+    PORT      STATE         SERVICE
+    68/udp    open|filtered dhcpc
+    8600/udp  open|filtered asterix
+    21074/udp open|filtered unknown
+    28899/udp open|filtered unknown
+    42379/udp open|filtered unknown
+    49839/udp open|filtered unknown
+    55099/udp open|filtered unknown
+    60901/udp open|filtered unknown
+    MAC Address: C8:E6:91:0A:6F:4C (Unknown)
+
+    Nmap done: 1 IP address (1 host up) scanned in 10081.66 seconds
