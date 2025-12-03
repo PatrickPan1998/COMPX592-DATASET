@@ -1,0 +1,124 @@
+TCP: 
+    remnux@remnux:~$ sudo nmap -v -sS -sV -sC -p- 192.168.0.103
+    Starting Nmap 7.80 ( https://nmap.org ) at 2025-11-25 21:32 EST
+    NSE: Loaded 151 scripts for scanning.
+    NSE: Script Pre-scanning.
+    Initiating NSE at 21:32
+    Completed NSE at 21:32, 0.00s elapsed
+    Initiating NSE at 21:32
+    Completed NSE at 21:32, 0.00s elapsed
+    Initiating NSE at 21:32
+    Completed NSE at 21:32, 0.00s elapsed
+    Initiating ARP Ping Scan at 21:32
+    Scanning 192.168.0.103 [1 port]
+    Completed ARP Ping Scan at 21:32, 0.30s elapsed (1 total hosts)
+    Initiating Parallel DNS resolution of 1 host. at 21:32
+    Completed Parallel DNS resolution of 1 host. at 21:32, 0.07s elapsed
+    Initiating SYN Stealth Scan at 21:32
+    Scanning 192.168.0.103 [65535 ports]
+    Discovered open port 9002/tcp on 192.168.0.103
+    Discovered open port 25602/tcp on 192.168.0.103
+    Discovered open port 9001/tcp on 192.168.0.103
+    Discovered open port 10554/tcp on 192.168.0.103
+    Discovered open port 10080/tcp on 192.168.0.103
+    Completed SYN Stealth Scan at 21:32, 11.05s elapsed (65535 total ports)
+    Initiating Service scan at 21:32
+    Scanning 5 services on 192.168.0.103
+    Service scan Timing: About 20.00% done; ETC: 21:35 (0:02:32 remaining)
+    Service scan Timing: About 60.00% done; ETC: 21:36 (0:01:38 remaining)
+    Completed Service scan at 21:35, 176.88s elapsed (5 services on 1 host)
+    NSE: Script scanning 192.168.0.103.
+    Initiating NSE at 21:35
+    Completed NSE at 21:35, 14.10s elapsed
+    Initiating NSE at 21:35
+    Completed NSE at 21:36, 60.10s elapsed
+    Initiating NSE at 21:36
+    Completed NSE at 21:36, 0.00s elapsed
+    Nmap scan report for 192.168.0.103
+    Host is up (0.017s latency).
+    Not shown: 65530 closed ports
+    PORT      STATE SERVICE     VERSION
+    9001/tcp  open  tor-orport?
+    9002/tcp  open  dynamid?
+    10080/tcp open  amanda?
+    10554/tcp open  rtsp
+    | fingerprint-strings: 
+    |   FourOhFourRequest, GenericLines, GetRequest: 
+    |     RTSP/1.0 551 Option not supported
+    |_    Cseq: 0
+    |_rtsp-methods: ERROR: Script execution failed (use -d to debug)
+    25602/tcp open  unknown
+    1 service unrecognized despite returning data. If you know the service/version, please submit the following fingerprint at https://nmap.org/cgi-bin/submit.cgi?new-service :
+    SF-Port10554-TCP:V=7.80%I=7%D=11/25%Time=692666D2%P=x86_64-pc-linux-gnu%r(
+    SF:GenericLines,2E,"RTSP/1\.0\x20551\x20Option\x20not\x20supported\r\nCseq
+    SF::\x200\r\n\r\n")%r(GetRequest,2E,"RTSP/1\.0\x20551\x20Option\x20not\x20
+    SF:supported\r\nCseq:\x200\r\n\r\n")%r(FourOhFourRequest,2E,"RTSP/1\.0\x20
+    SF:551\x20Option\x20not\x20supported\r\nCseq:\x200\r\n\r\n");
+    MAC Address: 1C:79:2D:76:25:B3 (Unknown)
+
+    NSE: Script Post-scanning.
+    Initiating NSE at 21:36
+    Completed NSE at 21:36, 0.00s elapsed
+    Initiating NSE at 21:36
+    Completed NSE at 21:36, 0.00s elapsed
+    Initiating NSE at 21:36
+    Completed NSE at 21:36, 0.00s elapsed
+    Read data files from: /usr/bin/../share/nmap
+    Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+    Nmap done: 1 IP address (1 host up) scanned in 264.07 seconds
+            Raw packets sent: 65537 (2.884MB) | Rcvd: 65536 (2.621MB)
+
+UDP:
+    remnux@remnux:~$ sudo nmap -v -sU -sV 192.168.0.103
+    Starting Nmap 7.80 ( https://nmap.org ) at 2025-11-26 22:09 EST
+    NSE: Loaded 45 scripts for scanning.
+    Initiating ARP Ping Scan at 22:09
+    Scanning 192.168.0.103 [1 port]
+    Completed ARP Ping Scan at 22:09, 0.04s elapsed (1 total hosts)
+    Initiating Parallel DNS resolution of 1 host. at 22:09
+    Completed Parallel DNS resolution of 1 host. at 22:09, 0.07s elapsed
+    Initiating UDP Scan at 22:09
+    Scanning 192.168.0.103 [1000 ports]
+    Increasing send delay for 192.168.0.103 from 0 to 50 due to max_successful_tryno increase to 4
+    Increasing send delay for 192.168.0.103 from 50 to 100 due to max_successful_tryno increase to 5
+    Increasing send delay for 192.168.0.103 from 100 to 200 due to max_successful_tryno increase to 6
+    Increasing send delay for 192.168.0.103 from 200 to 400 due to 11 out of 13 dropped probes since last increase.
+    Increasing send delay for 192.168.0.103 from 400 to 800 due to 11 out of 11 dropped probes since last increase.
+    UDP Scan Timing: About 4.85% done; ETC: 22:20 (0:10:08 remaining)
+    UDP Scan Timing: About 7.55% done; ETC: 22:23 (0:12:27 remaining)
+    UDP Scan Timing: About 10.34% done; ETC: 22:24 (0:13:09 remaining)
+    UDP Scan Timing: About 23.79% done; ETC: 22:26 (0:12:23 remaining)
+    UDP Scan Timing: About 30.60% done; ETC: 22:26 (0:11:29 remaining)
+    UDP Scan Timing: About 36.80% done; ETC: 22:26 (0:10:35 remaining)
+    UDP Scan Timing: About 42.39% done; ETC: 22:26 (0:09:44 remaining)
+    UDP Scan Timing: About 47.76% done; ETC: 22:26 (0:08:53 remaining)
+    UDP Scan Timing: About 52.92% done; ETC: 22:26 (0:08:01 remaining)
+    UDP Scan Timing: About 58.30% done; ETC: 22:26 (0:07:08 remaining)
+    UDP Scan Timing: About 63.68% done; ETC: 22:26 (0:06:14 remaining)
+    UDP Scan Timing: About 68.84% done; ETC: 22:26 (0:05:21 remaining)
+    UDP Scan Timing: About 73.90% done; ETC: 22:26 (0:04:29 remaining)
+    UDP Scan Timing: About 79.27% done; ETC: 22:27 (0:03:34 remaining)
+    UDP Scan Timing: About 84.65% done; ETC: 22:27 (0:02:39 remaining)
+    UDP Scan Timing: About 89.71% done; ETC: 22:27 (0:01:47 remaining)
+    UDP Scan Timing: About 94.77% done; ETC: 22:27 (0:00:54 remaining)
+    Completed UDP Scan at 22:27, 1085.13s elapsed (1000 total ports)
+    Initiating Service scan at 22:27
+    Scanning 2 services on 192.168.0.103
+    Completed Service scan at 22:29, 97.61s elapsed (2 services on 1 host)
+    NSE: Script scanning 192.168.0.103.
+    Initiating NSE at 22:29
+    Completed NSE at 22:29, 0.01s elapsed
+    Initiating NSE at 22:29
+    Completed NSE at 22:29, 1.01s elapsed
+    Nmap scan report for 192.168.0.103
+    Host is up (0.0044s latency).
+    Not shown: 998 closed ports
+    PORT      STATE         SERVICE      VERSION
+    3702/udp  open|filtered ws-discovery
+    36669/udp open|filtered unknown
+    MAC Address: 1C:79:2D:76:25:B3 (Unknown)
+
+    Read data files from: /usr/bin/../share/nmap
+    Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+    Nmap done: 1 IP address (1 host up) scanned in 1184.68 seconds
+            Raw packets sent: 1448 (41.680KB) | Rcvd: 1090 (61.933KB)
