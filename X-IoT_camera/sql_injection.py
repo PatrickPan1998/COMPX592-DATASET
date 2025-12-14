@@ -98,17 +98,13 @@ def main():
 
     results = []
 
-    # 2. 逐条测试
     for i, p in enumerate(payloads, start=1):
         print(f"\n[*] ({i}/{len(payloads)}) 测试中...")
         info = test_login(p)
         results.append(info)
-
-        # 3. 每次请求之间随机暂停一下，避免太猛
         delay = random.uniform(DELAY_MIN, DELAY_MAX)
         time.sleep(delay)
 
-    # 4. 保存到 Excel
     df = pd.DataFrame(results)
     df.to_excel(OUTPUT_EXCEL, index=False)
     print(f"\n[+] 所有结果已保存到: {OUTPUT_EXCEL}")
