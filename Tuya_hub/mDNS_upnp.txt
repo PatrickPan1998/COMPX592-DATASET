@@ -1,0 +1,9 @@
+└─$ sudo nmap -sU -Pn --script=upnp-info -p 1900 192.168.1.106
+Starting Nmap 7.95 ( https://nmap.org ) at 2025-12-13 19:41 EST
+Nmap scan report for 192.168.1.106
+Host is up.
+
+PORT     STATE         SERVICE
+1900/udp open|filtered upnp
+
+Nmap done: 1 IP address (1 host up) scanned in 7.25 seconds
