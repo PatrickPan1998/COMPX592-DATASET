@@ -1,0 +1,24 @@
+用户协议
+tuya app / smart life:
+    https://developerapp.tuyaus.com/protocol/192c3c61e4400032?lang=en
+ewelink:
+    https://appcms-src.coolkit.cn/ewelink/user-agreement-ewelink/9847.html
+x-iot:
+    https://xiot.io/terms/
+o-kam pro:
+    https://okampro.app/app-user-agreement/
+
+    
+------------------------
+------------------------
+
+
+privacy policy
+ewelink:
+    https://appcms-src.coolkit.cn/ewelink/user-agreement-ewelink/9847.html
+tuya app / smart life:
+    https://developerapp.tuyaus.com/protocol/1a824d962b40000b?lang=en
+x-iot:
+    https://xiot.io/privacy-policy/
+o-kam pro:
+    https://okampro.app/app-privacy-policy/

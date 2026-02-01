@@ -1,0 +1,56 @@
+========Seed 0========
+Message Index-0
+DevID: eb6ed3524b01e430e7bbuo
+Address: 192.168.0.106
+LocalKey: 0.I]^6liWd3=eF.G
+Version: 3.4
+Cmd: 13
+Content: {"protocol":5,"t":1765156332,"data":{"dps":{"1":false}}}
+
+========Seed 1========
+Message Index-1
+DevID: eb6ed3524b01e430e7bbuo
+Address: 192.168.0.106
+LocalKey: 0.I]^6liWd3=eF.G
+Version: 3.4
+Cmd: 16
+Content: {}
+
+========Seed 2========
+Message Index-2
+DevID: eb6ed3524b01e430e7bbuo
+Address: 192.168.0.106
+LocalKey: 0.I]^6liWd3=eF.G
+Version: 3.4
+Cmd: 13
+Content: {"protocol":4,"t":1264036367,"data":{"dps":{"9":10}}}
+
+
+========Seed 3========
+Message Index-3
+DevID: eb6ed3524b01e430e7bbuo
+Address: 192.168.0.106
+LocalKey: 0.I]^6liWd3=eF.G
+Version: 3.4
+Cmd: 13
+Content: {"protocol":4,"t":1765410344,"data":{"dps":{"20":2345}}}
+
+
+========Seed 4========
+Message Index-4
+DevID: eb6ed3524b01e430e7bbuo
+Address: 192.168.0.106
+LocalKey: 0.I]^6liWd3=eF.G
+Version: 3.4
+Cmd: 13
+Content: {"protocol":4,"t":1765410308,"data":{"dps":{"38":"memory"}}}
+
+========Seed 5========
+Message Index-5
+DevID: eb6ed3524b01e430e7bbuo
+Address: 192.168.0.106
+LocalKey: 0.I]^6liWd3=eF.G
+Version: 3.4
+Cmd: 13
+Content: {"protocol":4,"t":1765410270,"data":{"dps":{"40":"relay"}}}
+
