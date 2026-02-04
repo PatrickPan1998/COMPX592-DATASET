@@ -1,0 +1,38 @@
+========Seed 0========
+Message Index-0
+DevID: ebb8ecbb5c21175cef2n9p
+Address: 192.168.0.102
+LocalKey: rD8u|)ts(To2S48(
+Version: 3.4
+Cmd: 13
+Content: {"protocol":4,"t":1765156001,"data":{"sub_devices":true}}
+
+Original Response
+{'protocol': 4, 't': 1765418001, 'data': {'sub_devices': [{'id': 'eb0b684f5e9c1da95btyeb', 'online': True, 'type': 'zigbee'}, {'id': 'eb64bab32a9cb916a4pamz', 'online': False, 'type': 'zigbee'}], 'type': 'query'}}
+Probe Result:
+PI
+0 0 2 2 0 1 1 3
+PR and PS
+(0) {'protocol': 4, 't': 1765418007, 'data': {'sub_devices': [{'id': 'eb0b684f5e9c1da95btyeb', 'online': True, 'type': 'zigbee'}, {'id': 'eb64bab32a9cb916a4pamz', 'online': False, 'type': 'zigbee'}], 'type': 'query'}}98.76
+(1) {'protocol': 4, 't': 1765418020, 'data': {'sub_devices': [{'id': 'eb0b684f5e9c1da95btyeb', 'online': True, 'type': 'zigbee'}], 'type': 'query'}}92.31
+(2) {'Error': 'Invalid JSON Response from Device', 'Err': '900', 'Payload': 'data format error', 'invalid_json': 'data format error'}100.0
+(3) {'protocol': 4, 't': 1765418052, 'data': {'sub_devices': [], 'type': 'query'}}71.88
+
+Message Index-1
+DevID: ebb8ecbb5c21175cef2n9p
+Address: 192.168.0.102
+LocalKey: rD8u|)ts(To2S48(
+Version: 3.4
+Cmd: 13
+Content: {"protocol":4,"t":1765156002,"data":{"query":"sub_status"}}
+
+Original Response
+{'protocol': 4, 't': 1765418060, 'data': {'sub_status': [{'id': 'eb0b684f5e9c1da95btyeb', 'dps': {'1': True, '2': 'white', '3': 800, '4': 400}}, {'id': 'eb64bab32a9cb916a4pamz', 'dps': {'1': False}}], 'type': 'query'}}
+Probe Result:
+PI
+0 0 2 2 0 1 1 3
+PR and PS
+(0) {'protocol': 4, 't': 1765418067, 'data': {'sub_status': [{'id': 'eb0b684f5e9c1da95btyeb', 'dps': {'1': True, '2': 'white', '3': 800, '4': 400}}, {'id': 'eb64bab32a9cb916a4pamz', 'dps': {'1': False}}], 'type': 'query'}}97.92
+(1) {'protocol': 4, 't': 1765418084, 'data': {'sub_status': [{'id': 'eb0b684f5e9c1da95btyeb', 'dps': {'1': True, '2': 'colour', '5': '000003e803e8ffff00000000'}}], 'type': 'query'}}86.47
+(2) {'Error': 'Invalid JSON Response from Device', 'Err': '900', 'Payload': 'data format error', 'invalid_json': 'data format error'}100.0
+(3) {'protocol': 4, 't': 1765418128, 'data': {'sub_status': [], 'type': 'query'}}69.55

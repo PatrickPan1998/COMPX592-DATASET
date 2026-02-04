@@ -3,7 +3,6 @@ import os
 import sys
 import time
 import random
-import time 
 
 import pandas as pd
 from scipy.cluster import hierarchy
@@ -14,21 +13,18 @@ from SnR import Messenger
 from Seed import Message, Seed
 
 
-#  Golbal var
+# Golbal var
 queue = []
 restoreSeed = ''
 outputfold = ''
 
 
-
 # read the input file and store it as seed
 def readInputFile(file):
     s = Seed()
-    lines = []
     with open(file, 'r') as f:
         lines = f.read().split("\n")
     for i in range(0, len(lines)):
-        # print(lines[i])
         if "========" in lines[i]:
             mes = Message()
             for j in range(i + 1, len(lines)):
@@ -38,7 +34,6 @@ def readInputFile(file):
                 if ":" in lines[j]:
                     mes.append(lines[j])
             s.append(mes)
-    # s.display()
     return s
 
 
@@ -59,25 +54,26 @@ def writeRecord(queue, fold):
             f.writelines("========Seed " + str(i) + "========\n")
             for j in range(len(queue[i].M)):
 
-                f.writelines("Message Index-" + str(j) + "\n")  # write the message information
+                f.writelines("Message Index-" + str(j) + "\n")
                 for header in queue[i].M[j].headers:
                     f.writelines(header + ":" + queue[i].M[j].raw[header] + '\n')
                 f.writelines("\n")
 
-                f.writelines('Original Response' + "\n")  # write the original response
-                f.writelines(queue[i].R[j])
+                f.writelines('Original Response' + "\n")
+                f.writelines(queue[i].R[j] if j < len(queue[i].R) else "")
 
-                f.writelines('Probe Result:' + "\n")  # write the results of probe
-                f.writelines('PI' + "\n")  # PI
+                f.writelines('Probe Result:' + "\n")
+                f.writelines('PI' + "\n")
                 for n in queue[i].PI[j]:
                     f.write(str(n) + " ")
                 f.writelines("\n")
+
                 f.writelines('PR and PS' + "\n")
                 for n in range(len(queue[i].PR[j])):
                     f.writelines("(" + str(n) + ") " + queue[i].PR[j][n])
                     f.writelines(str(queue[i].PS[j][n]) + "\n")
-            f.writelines("\n")
-            f.writelines("\n")
+
+            f.writelines("\n\n")
     return 0
 
 
@@ -87,18 +83,19 @@ def readRecordFile(file):
     with open(os.path.join(file), 'r') as f:
         lines = f.readlines()
         i = 0
-        while i <= len(lines):
+        while i <= len(lines) - 1:
             if lines[i].startswith("========Seed"):
                 seedStart = i + 1
                 seedEnd = len(lines)
                 for j in range(i + 1, len(lines)):
-                    if lines[i].startswith("========Seed"):
+                    if lines[j].startswith("========Seed"):
                         seedEnd = j
+                        break
+
                 seed = Seed()
                 index = seedStart
 
-                while index <= seedEnd:
-
+                while index < seedEnd:
                     if lines[index].startswith('Message Index'):
                         message = Message()
                         responseStart = seedEnd
@@ -111,20 +108,23 @@ def readRecordFile(file):
                         seed.M.append(message)
                         index = responseStart
 
-                    if lines[index].startswith('Original Response'):
-                        index = index + 1
-                        seed.R.append(lines[index])
+                    if index < seedEnd and lines[index].startswith('Original Response'):
+                        index += 1
+                        if index < seedEnd:
+                            seed.R.append(lines[index])
 
-                    if lines[index].startswith('PI'):
-                        index = index + 1
-                        PIstr = lines[index]
-                        PI = []
-                        for n in PIstr.strip().split(' '):
-                            PI.append(int(n))
-                        seed.PI.append(PI)
+                    if index < seedEnd and lines[index].startswith('PI'):
+                        index += 1
+                        if index < seedEnd:
+                            PIstr = lines[index]
+                            PI = []
+                            for n in PIstr.strip().split(' '):
+                                if n.strip() != "":
+                                    PI.append(int(n))
+                            seed.PI.append(PI)
 
-                    if lines[index].startswith('PR and PS'):
-                        index = index + 1
+                    if index < seedEnd and lines[index].startswith('PR and PS'):
+                        index += 1
                         ends = seedEnd
                         PR = []
                         PS = []
@@ -135,127 +135,135 @@ def readRecordFile(file):
                         for j in range(index, ends):
                             if lines[j].startswith("("):
                                 PR.append(lines[j][3:])
-                            elif lines[j][0].isdigit():
+                            elif lines[j].strip() and lines[j][0].isdigit():
                                 PS.append(float(lines[j].strip()))
                         seed.PR.append(PR)
                         seed.PS.append(PS)
 
-                    index = index + 1
+                    index += 1
 
-                i = index
+                i = seedEnd
                 queue.append(seed)
 
-            i = i + 1
+            i += 1
     return queue
 
 
-# Try to use the input given for a complete communication.
-# The func is used to test whether the input meets the requirements or whether there are other problems
+# DryRun：必须捕获 Messenger 返回的 "#error/#crash"
 def dryRun(queue):
     global restoreSeed
     m = Messenger(restoreSeed)
     for i in range(0, len(queue)):
         seed = m.DryRunSend(queue[i])
+        if isinstance(seed, str) and seed.startswith("#"):
+            print("#### DryRun failed:", seed)
+            return True
         queue[i] = seed
     return False
 
 
-# Calculate the edit distance of two string   
 def EditDistanceRecursive(str1, str2):
     edit = [[i + j for j in range(len(str2) + 1)] for i in range(len(str1) + 1)]
     for i in range(1, len(str1) + 1):
         for j in range(1, len(str2) + 1):
-            if str1[i - 1] == str2[j - 1]:
-                d = 0
-            else:
-                d = 1
+            d = 0 if str1[i - 1] == str2[j - 1] else 1
             edit[i][j] = min(edit[i - 1][j] + 1, edit[i][j - 1] + 1, edit[i - 1][j - 1] + d)
     return edit[len(str1)][len(str2)]
 
 
-# Calculate the similarity score of two string
 def SimilarityScore(str1, str2):
-    s1 = str1.strip()
-    s2 = str2.strip()
+    s1 = (str1 or "").strip()
+    s2 = (str2 or "").strip()
     if len(s1) == 0 and len(s2) == 0:
         return 100.0
     max_len = max(len(s1), len(s2))
     if max_len == 0:
         return 0.0
     ED = EditDistanceRecursive(s1, s2)
-    print("-------ED: ",ED,"max_len: ",max_len)
+    print("-------ED: ", ED, "max_len: ", max_len)
     return round((1 - (ED / max_len)) * 100, 2)
 
-# Use heuristics to detect the meaning of each byte in the message
-def Probe(Seed):
+
+# Probe（方案A）：过滤空响应，避免污染 PR/PS/PI
+def Probe(SeedObj):
     global restoreSeed
 
     print("*** Probe ")
     m = Messenger(restoreSeed)
-    for index in range(len(Seed.M)):
+
+    for index in range(len(SeedObj.M)):
 
         responsePool = []
         similarityScore = []
         probeResponseIndex = []
 
-        print(Seed.M[index].raw["Content"].strip())  # test only
-        # original message
-        response1 = m.ProbeSend(Seed, index)  # send the probe message   ####### 
+        print(SeedObj.M[index].raw["Content"].strip())
+
+        response1 = m.ProbeSend(SeedObj, index)
         time.sleep(1)
-        response2 = m.ProbeSend(Seed, index)  # send the probe message twice
+        response2 = m.ProbeSend(SeedObj, index)
+
+        # ✅ 方案A关键：任何一次为空，就给占位并跳过该 message 的 probe
+        if (response1 or "").strip() == "" or (response2 or "").strip() == "":
+            content_len = len(SeedObj.M[index].raw.get("Content", ""))
+            SeedObj.PR.append([""])                  # 占位：空响应类
+            SeedObj.PS.append([100.0])               # 占位阈值
+            SeedObj.PI.append([0] * content_len)     # 全部归到 0 类
+            continue
 
         responsePool.append(response1)
         similarityScore.append(SimilarityScore(response1.strip(), response2.strip()))
 
-        # probe process
-        for i in range(0, len(Seed.M[index].raw["Content"])):
-            temp = Seed.M[index].raw["Content"]
-            Seed.M[index].raw["Content"] = Seed.M[index].raw["Content"].strip()[:i] + Seed.M[index].raw[
-                                                                                          "Content"].strip()[
-                                                                                      i + 1:]  # delete ith byte
+        # probe process: delete ith byte
+        for i in range(0, len(SeedObj.M[index].raw["Content"])):
+            temp = SeedObj.M[index].raw["Content"]
+            SeedObj.M[index].raw["Content"] = SeedObj.M[index].raw["Content"].strip()[:i] + \
+                                              SeedObj.M[index].raw["Content"].strip()[i + 1:]
 
-            response1 = m.ProbeSend(Seed, index)  # send the probe message   ####### 
+            response1 = m.ProbeSend(SeedObj, index)
             time.sleep(1)
-            response2 = m.ProbeSend(Seed, index)  # send the probe message twice
-            print(response1,end='')
+            _ = m.ProbeSend(SeedObj, index)  # response2 不再强依赖（避免噪声）
+            print(response1, end='')
 
-            if responsePool:
-                flag = True
-                for j in range(0, len(responsePool)):
-                    target = responsePool[j]
-                    score = similarityScore[j]
-                    c = SimilarityScore(target.strip(), response1.strip())
-                    if c >= score:
-                        flag = False
-                        probeResponseIndex.append(j)
-                        print(str(j)+" ", end='') 
-                        sys.stdout.flush()
-                        break
-                if flag:
-                    responsePool.append(response1)
-                    similarityScore.append(SimilarityScore(response1.strip(), response2.strip()))
-                    probeResponseIndex.append(j + 1)
-                    #print(j + 1)  # test only
+            # ✅ 方案A关键：空响应直接归入 0 类，不引入新类
+            if (response1 or "").strip() == "":
+                probeResponseIndex.append(0)
+                SeedObj.M[index].raw["Content"] = temp
+                continue
 
-            Seed.M[index].raw["Content"] = temp  # restore the message
+            flag = True
+            for j in range(0, len(responsePool)):
+                target = responsePool[j]
+                score = similarityScore[j]
+                c = SimilarityScore((target or "").strip(), response1.strip())
+                if c >= score:
+                    flag = False
+                    probeResponseIndex.append(j)
+                    print(str(j) + " ", end='')
+                    sys.stdout.flush()
+                    break
 
-        Seed.PR.append(responsePool)
-        Seed.PS.append(similarityScore)
-        Seed.PI.append(probeResponseIndex)
+            if flag:
+                responsePool.append(response1)
+                # ✅ 新类阈值：用自己和自己（或下一次）比容易受噪声影响，这里用 100 作为保守阈值
+                similarityScore.append(100.0)
+                probeResponseIndex.append(len(responsePool) - 1)
 
-    return Seed
+            SeedObj.M[index].raw["Content"] = temp
+
+        SeedObj.PR.append(responsePool)
+        SeedObj.PS.append(similarityScore)
+        SeedObj.PI.append(probeResponseIndex)
+
+    return SeedObj
 
 
 def getFeature(response, score):
     feature = {'a': 0, 'n': 0, 's': 0}
-    # 防御：response 可能是 None
     response = (response or "")
     length = len(response)
 
-    # 如果响应是空串，直接返回一个简单特征，避免 KeyError
     if length == 0:
-        # 这里的 [0,0,0,length,score] 只是一个占位特征
-        # 所有空响应会聚到同一类，对聚类是合理的
         return [0, 0, 0, 0, score]
 
     cur = None
@@ -275,14 +283,13 @@ def getFeature(response, score):
             feature[pre] = feature[pre] + 1
             pre = cur
 
-    # 循环结束后，最后一个段落计数 +1
     if cur in feature:
         feature[cur] = feature[cur] + 1
 
     return [feature['a'], feature['n'], feature['s'], length, score]
 
 
-
+# ✅ 必改：修越界
 def formSnippets(pi, cluster, index):
     snippet = []
     for i in range(index):
@@ -294,72 +301,71 @@ def formSnippets(pi, cluster, index):
                 pi[j] = p
 
     i = 0
-    while i < len(pi)-1:
+    while i < len(pi) - 1:
         j = i
-        #print("i="+str(i)) # test only
         skip = True
-        while j <= len(pi) and skip:
-            j = j + 1
-            #print("j=" + str(j))  # test only
-            if pi[j] != pi[i]:
+        while j < len(pi) and skip:
+            j += 1
+            if j == len(pi) or pi[j] != pi[i]:
                 snippet.append([i, j - 1])
                 skip = False
-            if j == len(pi)-1:
-                snippet.append([i, j])
-                skip = False
         i = j
-
-    #print(pi)  # test only
-    #print(snippet)   # test only
 
     return snippet
 
 
-def interesting(oldSeed,index):
+def interesting(oldSeed, index):
     global queue
     global restoreSeed
     m = Messenger(restoreSeed)
 
-    
     print(oldSeed.M[index].raw["Content"])
 
     seed = Seed()
     seed.M = oldSeed.M
     seed = m.DryRunSend(seed)
+    if isinstance(seed, str) and seed.startswith("#"):
+        return
     seed = Probe(seed)
     queue.append(seed)
 
 
+# ✅ 必改：修文件名
 def writeOutput(seed):
     global outputfold
-    localtime = time.localtime(time.time())
-    file = 'Crash-'+localtime+'.txt'
+    ts = time.strftime("%Y%m%d-%H%M%S", time.localtime())
+    file = f'Crash-{ts}.txt'
 
     with open(os.path.join(outputfold, file), 'w') as f:
-        for i in range(len(seed)):
-            f.writelines("Message Index-" + str(i) + "\n")  # write the message information
+        for i in range(len(seed.M)):
+            f.writelines("Message Index-" + str(i) + "\n")
             for header in seed.M[i].headers:
                 f.writelines(header + ":" + seed.M[i].raw[header] + '\n')
             f.writelines("\n")
-    print("Found a crash @ "+localtime)
+
+    print("Found a crash @ " + ts)
     sys.exit()
 
 
 def responseHandle(seed, info):
-    if info.startswith("#interesting"):
+    if (info or "").startswith("#interesting"):
         print("~~Get Interesting in :")
         interesting(seed, int(info.split('-')[1]))
         return False
-    if info.startswith("#error"):
+
+    if (info or "").startswith("#error"):
         print("~~Something wrong with the target infomation (e.g. IP addresss or port)")
-    if info.startswith("#crash"):
+        return True
+
+    if (info or "").startswith("#crash"):
         writeOutput(seed)
+
+    # 方案A：空串/普通串都直接继续
     return True
 
 
-def SnippetMutate(seed, restoreSeed):
-    
-    m = Messenger(restoreSeed)
+def SnippetMutate(seed, restoreSeedObj):
+    m = Messenger(restoreSeedObj)
 
     for i in range(len(seed.M)):
         pool = seed.PR[i]
@@ -368,13 +374,10 @@ def SnippetMutate(seed, restoreSeed):
 
         featureList = []
         for j in range(len(pool)):
-            featureList.append(getFeature(pool[j].strip(), similarityScores[j]))
+            featureList.append(getFeature((pool[j] or "").strip(), similarityScores[j]))
 
         df = pd.DataFrame(featureList)
         cluster = hierarchy.linkage(df, method='average', metric='euclidean')
-        #print("Cluster:")
-        #print(cluster)
-        #seed.display()
 
         seed.ClusterList.append(cluster)
 
@@ -391,20 +394,18 @@ def SnippetMutate(seed, restoreSeed):
                     message = seed.M[i].raw["Content"]
                     asc = ""
                     for o in range(snippet[0], snippet[1]):
-                        #print(255-ord(message[o]))
-                        asc=asc+(chr(255-ord(message[o])))
-                    #message[o] = chr(255-ord(chr(message[o])))
+                        asc = asc + (chr(255 - ord(message[o])))
                     message = message[:snippet[0]] + asc + message[snippet[1] + 1:]
                     seed.M[i].raw["Content"] = message
-                    responseHandle(seed, m.SnippetMutationSend(seed,i))
+                    responseHandle(seed, m.SnippetMutationSend(seed, i))
                     seed.M[i].raw["Content"] = tempMessage
 
                     # ========  Empty ========
                     print("--Empty")
                     message = seed.M[i].raw["Content"]
-                    message = message[:snippet[0]] + message[snippet[1]+1:]
+                    message = message[:snippet[0]] + message[snippet[1] + 1:]
                     seed.M[i].raw["Content"] = message
-                    responseHandle(seed, m.SnippetMutationSend(seed,i))
+                    responseHandle(seed, m.SnippetMutationSend(seed, i))
                     seed.M[i].raw["Content"] = tempMessage
 
                     # ========  Repeat ========
@@ -413,99 +414,95 @@ def SnippetMutate(seed, restoreSeed):
                     t = random.randint(2, 5)
                     message = message[:snippet[0]] + message[snippet[0]:snippet[1]] * t + message[snippet[1] + 1:]
                     seed.M[i].raw["Content"] = message
-                    responseHandle(seed, m.SnippetMutationSend(seed,i))
+                    responseHandle(seed, m.SnippetMutationSend(seed, i))
                     seed.M[i].raw["Content"] = tempMessage
 
                     # ========  Interesting ========
                     print("--Interesting")
-                    interestingString = ['on','off','True','False','0','1']
+                    interestingString = ['on', 'off', 'True', 'False', '0', '1']
                     for t in interestingString:
                         message = seed.M[i].raw["Content"]
                         message = message[:snippet[0]] + t + message[snippet[1] + 1:]
                         seed.M[i].raw["Content"] = message
-                        responseHandle(seed, m.SnippetMutationSend(seed,i))
+                        responseHandle(seed, m.SnippetMutationSend(seed, i))
                         seed.M[i].raw["Content"] = tempMessage
 
         seed.Snippet.append(mutatedSnippet)
     return 0
 
 
-def Havoc(queue, restoreSeed):
+def Havoc(queue, restoreSeedObj):
     print("*Havoc")
-    m = Messenger(restoreSeed)
+    m = Messenger(restoreSeedObj)
 
-    t = random.randint(0,len(queue)-1)
+    t = random.randint(0, len(queue) - 1)
     seed = queue[t]
 
-    i = random.randint(0,len(seed.M)-1)
+    i = random.randint(0, len(seed.M) - 1)
     snippets = seed.Snippet[i]
     message = seed.M[i].raw["Content"]
     tempMessage = seed.M[i].raw["Content"]
 
-    n = random.randint(0,len(snippets)-1)
+    n = random.randint(0, len(snippets) - 1)
     snippet = snippets[n]
 
-    pick = random.randint(0,5)
-    
-    if pick == 0:  # ========  BitFlip ========
+    pick = random.randint(0, 5)
+
+    if pick == 0:  # BitFlip
         asc = ""
         for o in range(snippet[0], snippet[1]):
-            #print(255-ord(message[o]))
-            asc=asc+(chr(255-ord(message[o])))
-        #message[o] = chr(255-ord(chr(message[o])))
+            asc = asc + (chr(255 - ord(message[o])))
         message = message[:snippet[0]] + asc + message[snippet[1] + 1:]
         seed.M[i].raw["Content"] = message
-        temp = responseHandle(seed, m.SnippetMutationSend(seed,i))
+        temp = responseHandle(seed, m.SnippetMutationSend(seed, i))
         seed.M[i].raw["Content"] = tempMessage
         return temp
 
-    elif pick == 1: # ========  Empty ==========
+    elif pick == 1:  # Empty
         message = seed.M[i].raw["Content"]
-        message = message[:snippet[0]] + message[snippet[1]+1:]
+        message = message[:snippet[0]] + message[snippet[1] + 1:]
         seed.M[i].raw["Content"] = message
-        temp = responseHandle(seed, m.SnippetMutationSend(seed,i))
+        temp = responseHandle(seed, m.SnippetMutationSend(seed, i))
         seed.M[i].raw["Content"] = tempMessage
         return temp
-    
-    elif pick == 2: # ========  Repeat ========
+
+    elif pick == 2:  # Repeat
         message = seed.M[i].raw["Content"]
         t = random.randint(2, 5)
         message = message[:snippet[0]] + message[snippet[0]:snippet[1]] * t + message[snippet[1] + 1:]
         seed.M[i].raw["Content"] = message
-        temp = responseHandle(seed, m.SnippetMutationSend(seed,i))
+        temp = responseHandle(seed, m.SnippetMutationSend(seed, i))
         seed.M[i].raw["Content"] = tempMessage
         return temp
 
-    elif pick == 3: # ========  Interesting ========
-        interestingString = ['on','off','True','False','0','1']
-        interesting = random.randint(0,5)
-        t = interestingString[interesting]
+    elif pick == 3:  # Interesting
+        interestingString = ['on', 'off', 'True', 'False', '0', '1']
+        t = random.choice(interestingString)
         message = seed.M[i].raw["Content"]
         message = message[:snippet[0]] + t + message[snippet[1] + 1:]
         seed.M[i].raw["Content"] = message
-        temp = responseHandle(seed, m.SnippetMutationSend(seed,i))
+        temp = responseHandle(seed, m.SnippetMutationSend(seed, i))
         seed.M[i].raw["Content"] = tempMessage
         return temp
-    
-    elif pick == 4: # ======== Random Bytes Flip ===========
-        start = random.randint(0,len(message)-1)
-        end = random.randint(start,len(message))
+
+    elif pick == 4:  # Random Bytes Flip
+        start = random.randint(0, len(message) - 1)
+        end = random.randint(start, len(message))
         asc = ""
         for o in range(start, end):
-            asc=asc+(chr(255-ord(message[o])))
+            asc = asc + (chr(255 - ord(message[o])))
         message = message[:start] + asc + message[end + 1:]
         seed.M[i].raw["Content"] = message
-        temp = responseHandle(seed, m.SnippetMutationSend(seed,i))
+        temp = responseHandle(seed, m.SnippetMutationSend(seed, i))
         seed.M[i].raw["Content"] = tempMessage
         return temp
 
     return True
 
 
-
 def getArgs(argv):
     inputfold = ''
-    outputfold = ''
+    outputfold_local = ''
     restorefile = ''
     recordfile = ''
     try:
@@ -522,22 +519,18 @@ def getArgs(argv):
         elif opt in ("-r", "--rfile"):
             restorefile = arg
         elif opt in ("-o", "--ofold"):
-            outputfold = arg
+            outputfold_local = arg
         elif opt in ("-c", "--cfile"):
             recordfile = arg
         if not recordfile:
             recordfile = 'unavailable'
     print('Input fold：', inputfold)
     print('Restore file: ', restorefile)
-    print('Output fold：', outputfold)
+    print('Output fold：', outputfold_local)
     print('Record file：', recordfile)
 
-    return inputfold, restorefile, outputfold, recordfile
+    return inputfold, restorefile, outputfold_local, recordfile
 
-
-# python "e:/ondrive-file/OneDrive - Swinburne University/Desktop/Snipuzz-py/Snipuzz.py" -i "E:/ondrive-file/OneDrive - Swinburne University/Desktop/Snipuzz-py/in" -r "E:\ondrive-file\OneDrive - Swinburne University\Desktop\Snipuzz-py\record\yeelight-restore.txt" -o "E:\ondrive-file\OneDrive - Swinburne University\Desktop\Snipuzz-py\out" -c "E:\ondrive-file\OneDrive - Swinburne University\Desktop\Snipuzz-py\out\ProbeRecord.txt"
-
-# python "e:/ondrive-file/OneDrive - Swinburne University/Desktop/Snipuzz-py/Snipuzz.py" -i "E:/ondrive-file/OneDrive - Swinburne University/Desktop/Snipuzz-py/in" -r "E:\ondrive-file\OneDrive - Swinburne University\Desktop\Snipuzz-py\record\yeelight-restore.txt" -o "E:\ondrive-file\OneDrive - Swinburne University\Desktop\Snipuzz-py\out" 
 
 def main(argv):
     global queue, restoreSeed, outputfold
@@ -545,19 +538,16 @@ def main(argv):
     inputfold, restorefile, outputfold, recordfile = getArgs(argv)
     restoreSeed = readInputFile(restorefile)
 
-
-    queue =  readInputFold(inputfold)
-
     if recordfile and os.path.exists(recordfile):
         queue = readRecordFile(recordfile)
         for seed in queue:
             seed.display()
-        if (dryRun(queue)):  # Dry Run
+        if dryRun(queue):
             print('#### Dry run failed, check the inputs or connection.')
             sys.exit()
     else:
         queue = readInputFold(inputfold)
-        if (dryRun(queue)):  # Dry Run
+        if dryRun(queue):
             print('#### Dry run failed, check the inputs or connection.')
             sys.exit()
         for i in range(len(queue)):
@@ -565,13 +555,13 @@ def main(argv):
         writeRecord(queue, outputfold)
 
     skip = False
-    while (1):
+    while True:
         if not skip:
-            i=0
+            i = 0
             while i < len(queue):
                 if not queue[i].isMutated:
                     SnippetMutate(queue[i], restoreSeed)
-                i=i+1
+                i += 1
         skip = True
         skip = Havoc(queue, restoreSeed)
 

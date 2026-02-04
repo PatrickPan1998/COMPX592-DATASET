@@ -1,0 +1,17 @@
+========Seed 0========
+Message Index-0
+DevID: ebb8ecbb5c21175cef2n9p
+Address: 192.168.0.102
+LocalKey: rD8u|)ts(To2S48(
+Version: 3.4
+Cmd: 13
+Content: {"protocol":4,"t":1765156001,"data":{"sub_devices":true}}
+
+========Seed 1========
+Message Index-1
+DevID: ebb8ecbb5c21175cef2n9p
+Address: 192.168.0.102
+LocalKey: rD8u|)ts(To2S48(
+Version: 3.4
+Cmd: 13
+Content: {"protocol":4,"t":1765156002,"data":{"query":"sub_status"}}

@@ -1,0 +1,109 @@
+========Seed 0========
+
+Message Index-0
+DevID: eb66e081023a3a3671ziql
+Address: 192.168.0.108
+LocalKey: oE[2D#9]:c=_hP|r
+Version: 3.4
+Cmd: 13
+Content: {"protocol":5,"t":1765156332,"data":{"dps":{"1":false}}}
+
+Original Response
+{'protocol': 4, 't': 1765410953, 'data': {'dps': {'1': False}, 'type': 'query'}, 'dps': {'1': False}}
+Probe Result:
+PI
+0 0 0 0 0 0 2 2 0 0 1 1 0 0 0 0
+PR and PS
+(0) {'protocol': 4, 't': 1765410961, 'data': {'dps': {'1': False}, 'type': 'query'}, 'dps': {'1': False}}99.01
+(1) {'protocol': 4, 't': 1765410974, 'data': {'dps': {'1': True}, 'type': 'query'}, 'dps': {'1': True}}97.96
+(2) {'Error': 'Invalid JSON Response from Device', 'Err': '900', 'Payload': 'data format error'}100.0
+
+Message Index-1
+DevID: eb66e081023a3a3671ziql
+Address: 192.168.0.108
+LocalKey: oE[2D#9]:c=_hP|r
+Version: 3.4
+Cmd: 16
+Content: {}
+
+Original Response
+{'dps': {'1': False, '9': 0, '17': 15, '18': 0, '19': 0, '20': 2345}}
+Probe Result:
+PI
+0 2
+PR and PS
+(0) {'dps': {'1': False, '9': 0, '17': 15, '18': 0, '19': 0, '20': 2345}}100.0
+(1) {'Error': 'Invalid JSON Response from Device', 'Err': '900'}100.0
+(2) {'Error': 'Invalid JSON Response from Device', 'Err': '900'}100.0
+
+Message Index-2
+DevID: eb66e081023a3a3671ziql
+Address: 192.168.0.108
+LocalKey: oE[2D#9]:c=_hP|r
+Version: 3.4
+Cmd: 13
+Content: {"protocol":4,"t":1264036367,"data":{"dps":{"9":10}}}
+
+Original Response
+{'protocol': 4, 't': 1765410954, 'data': {'dps': {'9': 10}}, 'dps': {'9': 10}}
+Probe Result:
+PI
+0 0 0 0 0 2 2 0 0 0 1 1 0 0 0 0
+PR and PS
+(0) {'protocol': 4, 't': 1765411322, 'data': {'dps': {'9': 10}}, 'dps': {'9': 10}}98.72
+(1) {'protocol': 4, 't': 1765412320, 'data': {'dps': {'9': 1}}, 'dps': {'9': 1}}97.37
+(2) {'Error': 'Invalid JSON Response from Device', 'Err': '900'}100.0
+
+Message Index-3
+DevID: eb66e081023a3a3671ziql
+Address: 192.168.0.108
+LocalKey: oE[2D#9]:c=_hP|r
+Version: 3.4
+Cmd: 13
+Content: {"protocol":4,"t":1765410344,"data":{"dps":{"20":2345}}}
+
+Original Response
+{'protocol': 4, 't': 1765410957, 'data': {'dps': {'20': 2345}}, 'dps': {'20': 2345}}
+Probe Result:
+PI
+0 0 0 0 0 2 2 0 0 1 1 0 0 0 0 0
+PR and PS
+(0) {'protocol': 4, 't': 1765412546, 'data': {'dps': {'20': 2345}}, 'dps': {'20': 2345}}98.64
+(1) {'protocol': 4, 't': 1765413309, 'data': {'dps': {'20': 2323}}, 'dps': {'20': 2323}}86.12
+(2) {'Error': 'Invalid JSON Response from Device', 'Err': '900'}100.0
+
+Message Index-4
+DevID: eb66e081023a3a3671ziql
+Address: 192.168.0.108
+LocalKey: oE[2D#9]:c=_hP|r
+Version: 3.4
+Cmd: 13
+Content: {"protocol":4,"t":1765410308,"data":{"dps":{"38":"memory"}}}
+
+Original Response
+{'protocol': 4, 't': 1765410958, 'data': {'dps': {'38': 'memory'}}, 'dps': {'38': 'memory'}}
+Probe Result:
+PI
+0 0 0 0 0 2 2 0 0 1 1 0 0 0 0 0
+PR and PS
+(0) {'protocol': 4, 't': 1765414672, 'data': {'dps': {'38': 'memory'}}, 'dps': {'38': 'memory'}}99.08
+(1) {'protocol': 4, 't': 1765414686, 'data': {'dps': {'38': 'memoRy'}}, 'dps': {'38': 'memoRy'}}92.21
+(2) {'Error': 'Invalid JSON Response from Device', 'Err': '900'}100.0
+
+Message Index-5
+DevID: eb66e081023a3a3671ziql
+Address: 192.168.0.108
+LocalKey: oE[2D#9]:c=_hP|r
+Version: 3.4
+Cmd: 13
+Content: {"protocol":4,"t":1765410270,"data":{"dps":{"40":"relay"}}}
+
+Original Response
+{'protocol': 4, 't': 1765410958, 'data': {'dps': {'40': 'relay'}}, 'dps': {'40': 'relay'}}
+Probe Result:
+PI
+0 0 0 0 0 2 2 0 0 1 1 0 0 0 0 0
+PR and PS
+(0) {'protocol': 4, 't': 1765417359, 'data': {'dps': {'40': 'relay'}}, 'dps': {'40': 'relay'}}98.13
+(1) {'protocol': 4, 't': 1765419566, 'data': {'dps': {'40': 'reLay'}}, 'dps': {'40': 'reLay'}}91.44
+(2) {'Error': 'Invalid JSON Response from Device', 'Err': '900'}100.0
